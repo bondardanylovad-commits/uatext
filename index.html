@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<title>UAtext.com</title>
+
+<style>
+/*
+SCSS-СТРУКТУРА (для розуміння)
+$main-color: #0057b7;
+$accent-color: #ffd700;
+
+body {
+  font-family: ...
+  header {
+    background: $main-color;
+  }
+}
+*/
+
+body {
+    margin: 0;
+    font-family: "Georgia", serif;
+    background: #f4f4f4;
+    color: #222;
+}
+
+header {
+    background: linear-gradient(90deg, #0057b7, #ffd700);
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+header button {
+    margin: 5px;
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.container {
+    max-width: 1000px;
+    margin: auto;
+    padding: 20px;
+}
+
+.article {
+    background: white;
+    padding: 25px;
+    margin-bottom: 30px;
+    border-radius: 10px;
+}
+
+.article h2 {
+    font-size: 32px;
+}
+
+.article p {
+    font-size: 22px;
+    line-height: 1.6;
+}
+
+.actions {
+    margin-top: 15px;
+}
+
+.actions button {
+    margin-right: 10px;
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.comments {
+    margin-top: 15px;
+}
+
+.comments input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 5px;
+}
+
+.comment {
+    background: #eee;
+    padding: 8px;
+    margin-top: 5px;
+}
+
+.likes {
+    font-weight: bold;
+}
+
+.poems {
+    background: #111;
+    color: #f5f5f5;
+    padding: 30px;
+}
+
+.poems h2 {
+    text-align: center;
+    font-size: 36px;
+}
+
+.poem {
+    margin-bottom: 25px;
+}
+
+.poem h3 {
+    color: #ffd700;
+}
+
+footer {
+    text-align: center;
+    padding: 15px;
+    background: #222;
+    color: white;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>UAtext.com</h1>
+    <p>Великі тексти про Україну</p>
+    <button onclick="saveText()">💾 Зберегти</button>
+    <button onclick="shareText()">📤 Поділитися</button>
+</header>
+
+<div class="container">
+
+    <!-- ТЕКСТ ПРО УКРАЇНУ -->
+    <div class="article">
+        <h2>Україна — серце Європи</h2>
+        <p>
+            Україна — це держава з багатовіковою історією, культурою боротьби,
+            свободи та гідності. Від Карпат до Донбасу, від Полісся до Криму —
+            це земля сильних людей, мови, пісні та правди.
+        </p>
+
+        <div class="actions">
+            <span class="likes" id="like1">👍 0</span>
+            <button onclick="like(1)">Лайк</button>
+        </div>
+
+        <div class="comments">
+            <input placeholder="Написати коментар..." onkeydown="addComment(event,1)">
+            <div id="comments1"></div>
+        </div>
+    </div>
+
+    <!-- МІСТА -->
+    <div class="article">
+        <h2>Міста України</h2>
+        <p>
+            Київ — столиця та духовний центр.<br>
+            Львів — місто культури та кави.<br>
+            Харків — місто науки.<br>
+            Одеса — перлина біля моря.<br>
+            Дніпро — місто сили та промисловості.<br>
+            Чернігів, Полтава, Вінниця, Луцьк, Ужгород —
+            кожне місто має свою історію та душу.
+        </p>
+
+        <div class="actions">
+            <span class="likes" id="like2">👍 0</span>
+            <button onclick="like(2)">Лайк</button>
+        </div>
+    </div>
+
+</div>
+
+<!-- ВІРШІ ШЕВЧЕНКА -->
+<div class="poems">
+    <h2>Тарас Шевченко — вірші (1–20)</h2>
+
+    <!-- Для розміру я дав КОРОТКІ версії (уривки) -->
+    <div class="poem"><h3>1. Заповіт</h3><p>Як умру, то поховайте мене на могилі...</p></div>
+    <div class="poem"><h3>2. Думи мої</h3><p>Думи мої, думи мої, лихо мені з вами...</p></div>
+    <div class="poem"><h3>3. Кавказ</h3><p>Борітеся — поборете, вам Бог помагає...</p></div>
+    <div class="poem"><h3>4. Катерина</h3><p>Кохайтеся, чорнобриві, та не з москалями...</p></div>
+    <div class="poem"><h3>5. І мертвим, і живим</h3><p>Учітесь, читайте, і чужому научайтесь...</p></div>
+
+    <div class="poem"><h3>6–20</h3>
+        <p>
+            (Тут можуть бути повні тексти: «Сон», «Мені тринадцятий минало»,
+            «Гайдамаки», «Тополя», «Наймичка» та інші — легко додати)
+        </p>
+    </div>
+</div>
+
+<footer>
+    © 2026 UAtext.com
+</footer>
+
+<script>
+let likes = {1:0, 2:0};
+
+function like(id) {
+    likes[id]++;
+    document.getElementById("like"+id).innerText = "👍 " + likes[id];
+}
+
+function addComment(e, id) {
+    if (e.key === "Enter") {
+        const div = document.createElement("div");
+        div.className = "comment";
+        div.innerText = e.target.value;
+        document.getElementById("comments"+id).appendChild(div);
+        e.target.value = "";
+    }
+}
+
+function saveText() {
+    alert("Текст збережено (приклад)");
+}
+
+function shareText() {
+    alert("Посилання скопійовано (приклад)");
+}
+</script>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<title>UAtext.com</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Georgia, serif;
+    background: #f2f2f2;
+    color: #111;
+}
+
+header {
+    background: linear-gradient(90deg, #0057b7, #ffd700);
+    padding: 25px;
+    text-align: center;
+    color: white;
+}
+
+header button {
+    margin: 5px;
+    padding: 10px 16px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+}
+
+.container {
+    max-width: 1100px;
+    margin: auto;
+    padding: 25px;
+}
+
+.article {
+    background: white;
+    padding: 30px;
+    margin-bottom: 40px;
+    border-radius: 12px;
+}
+
+.article h2 {
+    font-size: 36px;
+}
+
+.article p {
+    font-size: 24px;
+    line-height: 1.7;
+}
+
+.actions {
+    margin-top: 15px;
+}
+
+.actions button {
+    padding: 8px 14px;
+    margin-right: 10px;
+}
+
+.comments input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+}
+
+.comment {
+    background: #eee;
+    padding: 10px;
+    margin-top: 5px;
+}
+
+.poems {
+    background: #111;
+    color: #eee;
+    padding: 40px;
+}
+
+.poems h2 {
+    text-align: center;
+    font-size: 40px;
+}
+
+.poem {
+    margin-bottom: 35px;
+}
+
+.poem h3 {
+    color: #ffd700;
+    font-size: 26px;
+}
+
+.poem p {
+    font-size: 20px;
+    line-height: 1.6;
+}
+
+footer {
+    background: #222;
+    color: white;
+    text-align: center;
+    padding: 15px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>UAtext.com</h1>
+    <p>Великі тексти • Україна • Поезія • Памʼять</p>
+    <button onclick="alert('Збережено')">💾 Зберегти</button>
+    <button onclick="alert('Посилання скопійовано')">📤 Поділитися</button>
+</header>
+
+<div class="container">
+
+<!-- ВЕЛИКИЙ ТЕКСТ ПРО УКРАЇНУ -->
+<div class="article">
+<h2>Україна — нація, що вистояла</h2>
+<p>
+Україна — це не просто територія на карті. Це історія боротьби,
+мови, культури та памʼяті. Протягом століть український народ
+захищав своє право бути собою. Через війни, голод, заборони,
+репресії — Україна вистояла.
+</p>
+<p>
+Українська мова — це голос поколінь. Українська пісня — це
+плач і радість народу. Українська земля — це місце сили,
+де кожен камінь памʼятає правду.
+</p>
+</div>
+
+<!-- МІСТА -->
+<div class="article">
+<h2>Міста України — живі сторінки історії</h2>
+<p>
+<b>Київ</b> — місто князів, храмів і свободи.  
+<b>Львів</b> — місто культури, кави і мистецтва.  
+<b>Харків</b> — інтелектуальне серце.  
+<b>Одеса</b> — гумор, море і порт свободи.  
+<b>Дніпро</b> — місто сили та інженерної думки.
+</p>
+<p>
+Чернігів, Полтава, Суми, Житомир, Вінниця, Луцьк, Рівне,
+Тернопіль, Івано-Франківськ, Ужгород, Чернівці, Хмельницький —
+кожне місто має власний характер і власну правду.
+</p>
+</div>
+
+</div>
+
+<!-- ШЕВЧЕНКО -->
+<div class="poems">
+<h2>Тарас Шевченко — вірші (1–20)</h2>
+
+<div class="poem"><h3>1. Заповіт</h3><p>
+Як умру, то поховайте<br>
+Мене на могилі,<br>
+Серед степу широкого,<br>
+На Вкраїні милій…
+</p></div>
+
+<div class="poem"><h3>2. Думи мої, думи мої</h3><p>
+Думи мої, думи мої,<br>
+Лихо мені з вами!<br>
+Нащо стали на папері<br>
+Сумними рядами?
+</p></div>
+
+<div class="poem"><h3>3. Кавказ</h3><p>
+Борітеся — поборете,<br>
+Вам Бог помагає!<br>
+За вас правда, за вас слава<br>
+І воля святая!
+</p></div>
+
+<div class="poem"><h3>4. Мені тринадцятий минало</h3><p>
+Мені тринадцятий минало,<br>
+Я пас ягнята за селом…
+</p></div>
+
+<div class="poem"><h3>5. Сон (У всякого своя доля)</h3><p>
+У всякого своя доля<br>
+І свій шлях широкий…
+</p></div>
+
+<div class="poem"><h3>6. І мертвим, і живим</h3><p>
+Учітесь, читайте,<br>
+І чужому научайтесь,<br>
+Й свого не цурайтесь.
+</p></div>
+
+<div class="poem"><h3>7. Катерина</h3><p>
+Кохайтеся, чорнобриві,<br>
+Та не з москалями…
+</p></div>
+
+<div class="poem"><h3>8. Тополя</h3><p>
+По діброві вітер виє,<br>
+Гуляє по полю…
+</p></div>
+
+<div class="poem"><h3>9. Наймичка</h3><p>
+У тієї Катерини<br>
+Хата на помості…
+</p></div>
+
+<div class="poem"><h3>10. Гайдамаки</h3><p>
+Гомоніла Україна,<br>
+Довго гомоніла…
+</p></div>
+
+<div class="poem"><h3>11. Причинна</h3><p>
+Реве та стогне Дніпр широкий…
+</p></div>
+
+<div class="poem"><h3>12. Лілея</h3><p>
+Зацвіла в долині<br>
+Червона калина…
+</p></div>
+
+<div class="poem"><h3>13. Марʼяна-черниця</h3><p>
+Віють вітри, віють буйні…
+</p></div>
+
+<div class="poem"><h3>14. Не завидуй багатому</h3><p>
+Не завидуй багатому,<br>
+Багатий не знає…
+</p></div>
+
+<div class="poem"><h3>15. Садок вишневий коло хати</h3><p>
+Садок вишневий коло хати,<br>
+Хрущі над вишнями гудуть…
+</p></div>
+
+<div class="poem"><h3>16. За сонцем хмаронька пливе</h3><p>
+За сонцем хмаронька пливе…
+</p></div>
+
+<div class="poem"><h3>17. І золотої, й дорогої</h3><p>
+І золотої, й дорогої<br>
+Мені, щоб знали ви, не жаль…
+</p></div>
+
+<div class="poem"><h3>18. Чигирине, Чигирине</h3><p>
+Чигирине, Чигирине,<br>
+Все на світі гине…
+</p></div>
+
+<div class="poem"><h3>19. Неофіти</h3><p>
+Не вмирає душа наша,<br>
+Не вмирає воля…
+</p></div>
+
+<div class="poem"><h3>20. Молитва</h3><p>
+Світе тихий, краю милий,<br>
+Моя Україно…
+</p></div>
+
+</div>
+
+<footer>
+© 2026 UAtext.com • Українське слово живе
+</footer>
+
+</body>
+</html>
