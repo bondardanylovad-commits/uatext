@@ -1,0 +1,160 @@
+<!<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Good with Pipa Pupa - FINAL</title>
+    <style>
+        :root { --pipa: #808080; --bg: #f0f2f5; }
+        body { font-family: 'Comic Sans MS', cursive; background: var(--bg); display: flex; flex-direction: column; align-items: center; padding: 20px; }
+        
+        .pipa { width: 120px; height: 140px; background: var(--pipa); border-radius: 50px 50px 30px 30px; position: relative; border: 4px solid #333; transition: 0.3s; margin: 15px; }
+        .eye { width: 10px; height: 10px; background: #000; border-radius: 50%; position: absolute; top: 45px; }
+        .eye.l { left: 35px; } .eye.r { right: 35px; }
+        .mouth { width: 20px; height: 8px; border-bottom: 3px solid #000; position: absolute; top: 70px; left: 50px; border-radius: 50%; }
+        .mouth.sad { border-bottom: none; border-top: 3px solid #000; top: 75px; }
+        .belly { width: 60px; height: 70px; background: white; border-radius: 50%; position: absolute; bottom: 10px; left: 30px; }
+
+        .card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 100%; max-width: 500px; text-align: center; display: none; }
+        .active { display: block; }
+
+        button { width: 90%; padding: 12px; margin: 8px; border-radius: 12px; border: none; font-size: 16px; cursor: pointer; background: #6c5ce7; color: white; font-weight: bold; transition: 0.2s; }
+        button:hover { transform: scale(1.02); }
+        .ultra-btn { background: #1e272e; border: 2px solid #f9ca24; color: #f9ca24; }
+        .back-btn { background: #ff7675; margin-top: 15px; }
+
+        #diploma { display: none; background: linear-gradient(45deg, #f9ca24, #ffffff); padding: 40px; border: 8px double #d35400; border-radius: 20px; text-align: center; box-shadow: 0 0 40px gold; }
+        .hard-text { color: #d35400; font-size: 1.8rem; font-weight: bold; margin: 20px 0; }
+    </style>
+</head>
+<body>
+
+    <h1 id="title">Good with Pipa Pupa</h1>
+
+    <div class="pipa" id="pipa-body">
+        <div class="eye l"></div><div class="eye r"></div>
+        <div class="mouth" id="pipa-mouth"></div>
+        <div class="belly"></div>
+    </div>
+
+    <div id="scr-reg" class="card active">
+        <h2>Введи ім'я (треба 3 цифри):</h2>
+        <input type="text" id="userName" style="padding:12px; width:80%; border-radius:10px; border:2px solid #ddd;" placeholder="Пінгвінчик123">
+        <button onclick="reg()">Увійти</button>
+    </div>
+
+    <div id="scr-menu" class="card">
+        <h2>Вибери складність:</h2>
+        <button onclick="play(1)">1 КЛАС (30 питань)</button>
+        <button onclick="play(4)">4 КЛАС (30 питань)</button>
+        <button class="ultra-btn" onclick="play('ULTRA')">⭐ ОДНЕ ТЯЖКЕ ПИТАННЯ</button>
+        <div style="margin-top:15px; display:flex; justify-content:center; gap:10px;">
+            <button style="width:auto; padding:8px 15px; background:#8d6e63;" onclick="setRU()">💩 RU</button>
+            <button style="width:auto; padding:8px 15px; background:#74b9ff;" onclick="location.reload()">🇺🇦 UA</button>
+        </div>
+    </div>
+
+    <div id="scr-game" class="card">
+        <p id="q-info" style="font-weight:bold; color:#636e72;"></p>
+        <h2 id="q-text"></h2>
+        <div id="q-options"></div>
+        <button class="back-btn" onclick="toMenu()">🏠 НАЗАД В МЕНЮ</button>
+    </div>
+
+    <div id="diploma">
+        <h1 style="color: #d35400;">📜 ДИПЛОМ МАЙСТРА</h1>
+        <p>Піпа Пупа вітає генія:</p>
+        <h2 id="winner" style="font-size: 2.2rem; color: #2d3436;"></h2>
+        <p>Ти розв'язав головну задачу!</p>
+        <div style="font-size:50px;">🐣👑🐣</div>
+        <button class="back-btn" onclick="location.reload()">ГРАТИ ЩЕ РАЗ</button>
+    </div>
+
+    <script>
+        let name = "";
+        let qNum = 1;
+        let gameMode = "";
+
+        function reg() {
+            let val = document.getElementById('userName').value;
+            let digits = (val.match(/\d/g) || []).length;
+            if (digits === 3) { name = val; show('scr-menu'); }
+            else { alert("Піпа Пупа каже: треба рівно 3 цифри в імені!"); }
+        }
+
+        function show(id) {
+            document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+            document.getElementById('diploma').style.display = 'none';
+            if(id === 'diploma') {
+                document.getElementById('diploma').style.display = 'block';
+                document.getElementById('pipa-body').style.display = 'none';
+            } else {
+                document.getElementById('pipa-body').style.display = 'block';
+                document.getElementById(id).classList.add('active');
+            }
+        }
+
+        function toMenu() { show('scr-menu'); }
+
+        function setRU() {
+            document.getElementById('pipa-body').style.background = '#5d4037';
+            alert("Тепер Піпа Пупа — какуля! 💩");
+        }
+
+        function play(m) {
+            gameMode = m;
+            qNum = 1;
+            show('scr-game');
+            loadQ();
+        }
+
+        function loadQ() {
+            let txt = document.getElementById('q-text');
+            let info = document.getElementById('q-info');
+            let optsBox = document.getElementById('q-options');
+            optsBox.innerHTML = '';
+            txt.className = "";
+
+            let question, answer;
+
+            if (gameMode === 'ULTRA') {
+                info.innerText = "ФІНАЛЬНИЙ БОС (ОДНЕ ПИТАННЯ)";
+                // Нове, трохи легше питання
+                question = "8540 - 3215 + 1000"; 
+                answer = 6325;
+                txt.className = "hard-text";
+            } else {
+                info.innerText = `Питання ${qNum} з 30`;
+                let a = Math.floor(Math.random() * 50) + (gameMode * 5);
+                let b = Math.floor(Math.random() * 30) + (gameMode * 2);
+                question = `${a} + ${b}`;
+                answer = a + b;
+            }
+
+            txt.innerText = question;
+            // Варіанти відповідей
+            let variants = [answer, answer + 100, answer - 10, answer + 5].sort(() => Math.random() - 0.5);
+
+            variants.forEach(v => {
+                let b = document.createElement('button');
+                b.style.background = "#00b894";
+                b.innerText = v.toLocaleString();
+                b.onclick = () => {
+                    if (v == answer) {
+                        if (gameMode === 'ULTRA' || qNum >= 30) {
+                            document.getElementById('winner').innerText = name;
+                            show('diploma');
+                        } else {
+                            qNum++;
+                            loadQ();
+                        }
+                    } else {
+                        document.getElementById('pipa-mouth').className = "mouth sad";
+                        alert("Неправильно! Спробуй ще раз.");
+                    }
+                };
+                optsBox.appendChild(b);
+            });
+        }
+    </script>
+</body>
+</html>
